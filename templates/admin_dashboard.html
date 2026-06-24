@@ -1,0 +1,89 @@
+{% extends "base.html" %}
+
+{% block title %}管理员面板{% endblock %}
+
+{% block content %}
+<div class="row mt-4">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header bg-info text-white">
+                <h4>用户管理</h4>
+                <a href="{{ url_for('admin_add_user') }}" class="btn btn-light btn-sm float-end">添加用户</a>
+            </div>
+            <div class="card-body">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>用户名</th>
+                            <th>邮箱</th>
+                            <th>角色</th>
+                            <th>操作</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for user in users %}
+                        <tr>
+                            <td>{{ user.username }}</td>
+                            <td>{{ user.email }}</td>
+                            <td>
+                                {% if user.is_admin() %}
+                                <span class="badge bg-danger">管理员</span>
+                                {% elif user.is_teacher() %}
+                                <span class="badge bg-primary">教师</span>
+                                {% else %}
+                                <span class="badge bg-success">学生</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                <a href="{{ url_for('admin_edit_user', user_id=user.id) }}" class="btn btn-sm btn-warning">编辑</a>
+                                {% if not user.is_admin() %}
+                                <form method="POST" action="{{ url_for('admin_delete_user', user_id=user.id) }}" class="d-inline">
+                                    <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('确定要删除吗？')">删除</button>
+                                </form>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header bg-info text-white">
+                <h4>课程管理</h4>
+                <a href="{{ url_for('admin_add_course') }}" class="btn btn-light btn-sm float-end">添加课程</a>
+            </div>
+            <div class="card-body">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>课程名称</th>
+                            <th>课程代码</th>
+                            <th>授课教师</th>
+                            <th>操作</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for course in courses %}
+                        <tr>
+                            <td>{{ course.name }}</td>
+                            <td>{{ course.code }}</td>
+                            <td>{{ course.teacher.username }}</td>
+                            <td>
+                                <a href="{{ url_for('admin_edit_course', course_id=course.id) }}" class="btn btn-sm btn-warning">编辑</a>
+                                <form method="POST" action="{{ url_for('admin_delete_course', course_id=course.id) }}" class="d-inline">
+                                    <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('确定要删除吗？')">删除</button>
+                                </form>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

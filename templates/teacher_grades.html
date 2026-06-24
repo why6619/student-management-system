@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+
+{% block title %}{{ course.name }} - 成绩管理{% endblock %}
+
+{% block content %}
+<div class="row mt-4">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header bg-primary text-white">
+                <h4>{{ course.name }} ({{ course.code }})</h4>
+                <a href="{{ url_for('teacher_dashboard') }}" class="btn btn-light btn-sm float-end">返回</a>
+            </div>
+            <div class="card-body">
+                <form method="POST" class="mb-4">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <label for="student_id" class="form-label">学生</label>
+                            <select class="form-control" id="student_id" name="student_id" required>
+                                {% for student in students %}
+                                <option value="{{ student.id }}">{{ student.username }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="col-md-4">
+                            <label for="score" class="form-label">成绩</label>
+                            <input type="number" class="form-control" id="score" name="score" min="0" max="100" step="0.5" required>
+                        </div>
+                        <div class="col-md-4">
+                            <label for="comment" class="form-label">评语</label>
+                            <input type="text" class="form-control" id="comment" name="comment">
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-success mt-3">提交成绩</button>
+                </form>
+
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>学生</th>
+                            <th>成绩</th>
+                            <th>等级</th>
+                            <th>评语</th>
+                            <th>操作</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for grade in grades %}
+                        <tr>
+                            <td>{{ grade.student.username }}</td>
+                            <td>{{ grade.score }}</td>
+                            <td><span class="grade-{{ grade.grade }}">{{ grade.grade }}</span></td>
+                            <td>{{ grade.comment if grade.comment else '-' }}</td>
+                            <td>
+                                <form method="POST" action="{{ url_for('teacher_delete_grade', grade_id=grade.id) }}" class="d-inline">
+                                    <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('确定要删除吗？')">删除</button>
+                                </form>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

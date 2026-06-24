@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+
+{% block title %}编辑用户{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center mt-5">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header bg-info text-white">
+                <h4>编辑用户</h4>
+            </div>
+            <div class="card-body">
+                <form method="POST">
+                    <div class="mb-3">
+                        <label for="username" class="form-label">用户名</label>
+                        <input type="text" class="form-control" id="username" name="username" value="{{ user.username }}" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="email" class="form-label">邮箱</label>
+                        <input type="email" class="form-control" id="email" name="email" value="{{ user.email }}" required>
+                    </div>
+                    {% if not user.is_admin() %}
+                    <div class="mb-3">
+                        <label for="role" class="form-label">角色</label>
+                        <select class="form-control" id="role" name="role" required>
+                            <option value="student" {% if user.is_student() %}selected{% endif %}>学生</option>
+                            <option value="teacher" {% if user.is_teacher() %}selected{% endif %}>教师</option>
+                        </select>
+                    </div>
+                    {% endif %}
+                    <div class="mb-3">
+                        <label for="password" class="form-label">密码（留空不修改）</label>
+                        <input type="password" class="form-control" id="password" name="password">
+                    </div>
+                    <button type="submit" class="btn btn-primary">保存</button>
+                    <a href="{{ url_for('admin_dashboard') }}" class="btn btn-secondary">取消</a>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

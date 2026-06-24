@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+
+{% block title %}学生面板{% endblock %}
+
+{% block content %}
+<div class="row mt-4">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header bg-success text-white">
+                <h4>我的成绩</h4>
+            </div>
+            <div class="card-body">
+                {% if grades %}
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>课程名称</th>
+                            <th>课程代码</th>
+                            <th>授课教师</th>
+                            <th>成绩</th>
+                            <th>等级</th>
+                            <th>评语</th>
+                            <th>更新时间</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for grade in grades %}
+                        <tr>
+                            <td>{{ grade.course.name }}</td>
+                            <td>{{ grade.course.code }}</td>
+                            <td>{{ grade.course.teacher.username }}</td>
+                            <td>{{ grade.score }}</td>
+                            <td><span class="grade-{{ grade.grade }}">{{ grade.grade }}</span></td>
+                            <td>{{ grade.comment if grade.comment else '-' }}</td>
+                            <td>{{ grade.updated_at.strftime('%Y-%m-%d %H:%M') if grade.updated_at else grade.created_at.strftime('%Y-%m-%d %H:%M') }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                
+                {% set total = grades | length %}
+                {% set avg_score = grades | sum(attribute='score') / total if total > 0 else 0 %}
+                <div class="mt-4">
+                    <div class="card bg-light">
+                        <div class="card-body">
+                            <h5>统计信息</h5>
+                            <p>课程总数: {{ total }}</p>
+                            <p>平均成绩: {{ "%.2f"|format(avg_score) }}</p>
+                            {% if avg_score >= 90 %}
+                            <p>综合等级: <span class="grade-A">A</span></p>
+                            {% elif avg_score >= 80 %}
+                            <p>综合等级: <span class="grade-B">B</span></p>
+                            {% elif avg_score >= 70 %}
+                            <p>综合等级: <span class="grade-C">C</span></p>
+                            {% elif avg_score >= 60 %}
+                            <p>综合等级: <span class="grade-D">D</span></p>
+                            {% else %}
+                            <p>综合等级: <span class="grade-F">F</span></p>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                {% else %}
+                <div class="text-center text-muted">
+                    <p>暂无成绩记录</p>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

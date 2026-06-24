@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+
+{% block title %}编辑课程{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center mt-5">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header bg-info text-white">
+                <h4>编辑课程</h4>
+            </div>
+            <div class="card-body">
+                <form method="POST">
+                    <div class="mb-3">
+                        <label for="name" class="form-label">课程名称</label>
+                        <input type="text" class="form-control" id="name" name="name" value="{{ course.name }}" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="code" class="form-label">课程代码</label>
+                        <input type="text" class="form-control" id="code" name="code" value="{{ course.code }}" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="description" class="form-label">课程描述</label>
+                        <textarea class="form-control" id="description" name="description" rows="3">{{ course.description }}</textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label for="teacher_id" class="form-label">授课教师</label>
+                        <select class="form-control" id="teacher_id" name="teacher_id" required>
+                            {% for teacher in teachers %}
+                            <option value="{{ teacher.id }}" {% if teacher.id == course.teacher_id %}selected{% endif %}>{{ teacher.username }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-primary">保存</button>
+                    <a href="{{ url_for('admin_dashboard') }}" class="btn btn-secondary">取消</a>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
