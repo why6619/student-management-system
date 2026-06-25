@@ -14,6 +14,7 @@ with app.app_context():
         admin.set_password('admin123')
         db.session.add(admin)
         db.session.commit()
-
-if __name__ == '__main__':
-    app.run()
+        print('管理员账号创建成功: admin/admin123')
+    else:
+        print('管理员账号已存在')
+    print('数据库初始化完成')
